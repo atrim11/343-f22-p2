@@ -11,8 +11,10 @@ img {
 
 #conference {
   text-align: center;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 #division {
   text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif
 }
