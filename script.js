@@ -1,3 +1,73 @@
+// testing to get all images on page to test getting the right name
+const images = document.querySelectorAll("img");
+var teamArray = [];
+//console.log(images);
+//send the team selection to the next page
+const url = new URL("http://127.0.0.1:5500/eval.html#");
+for (let i = 0; i < images.length; i++) {
+  //console.log(images[i].src);
+  images[i].addEventListener("click", function () {
+    //console.log("clicked");
+    //console.log(images[i].src);
+    getEval(images[i].src);
+    console.log(url + teamName);
+    window.location.assign(url + teamName);
+    // window.onload = function () {
+    //   console.log(url.pathname);
+    // };
+    //now have a method that will update the eval page with all the team info
+  });
+}
+var teamName;
+function getEval(image) {
+  teamName = image
+    .replaceAll("http://127.0.0.1:5500/images/", "")
+    .replaceAll(".png", "")
+    .toString();
+  console.log(teamName);
+  return teamName;
+  //document.getElementById("team-1").innerHTML.replace(teamName);
+}
+
+// Path: eval.html
+function teamInfo() {
+  let team = window.location.hash.replace("#", "");
+  document.getElementById("eval-logo").src = `images/${team}.png`;
+  team = team.replaceAll("_", " ");
+  document.getElementById("team-name").innerHTML = team;
+}
+
+//search bar function
+const searchBar = document.getElementById("search-bar");
+searchBar.addEventListener("keyup", (e) => {
+  console.log(e.target.value);
+  search();
+});
+
+function search() {
+  let input = document.getElementById("search-bar").value;
+  console.log(input);
+  input = input.toLowerCase();
+  let x = document.getElementsByTagName("img");
+  let y = document.getElementsByClassName("row justify-content-center");
+  for (i = 0; i < y.length; i++) {
+    if (input != "") {
+      y[i].style.display = "none";
+    } else {
+      //location.reload();
+      y[i].style.display = "flex";
+    }
+  }
+  for (i = 0; i < x.length; i++) {
+    if (getEval(x[i].src).toLowerCase().includes(input)) {
+      x[i].style.display = "block";
+    } else {
+      x[i].style.display = "none";
+    }
+  }
+}
+//end of search function
+
 //getting team filter buttons to work
 
 //button collections
@@ -96,42 +166,3 @@ SWButton.addEventListener("click", function () {
   SWDivision.style.display = "block";
   eastConference.style.display = "none";
 });
-
-// testing to get all images on page to test getting the right name
-const images = document.querySelectorAll("img");
-var teamArray = [];
-console.log(images);
-
-for (let i = 0; i < images.length; i++) {
-  //console.log(images[i].src);
-  images[i].addEventListener("click", function () {
-    console.log("clicked");
-    console.log(images[i].src);
-    getEval(images[i].src);
-  });
-}
-var teamName;
-function getEval(image) {
-  teamName = image
-    .replaceAll("http://127.0.0.1:5500/images/", "")
-    .replaceAll(".png", "")
-    .replaceAll("_", " ")
-    .toString();
-  console.log(teamName);
-  //document.getElementById("team-1").innerHTML.replace(teamName);
-}
-
-const options = {
-  method: "GET",
-  headers: {
-    "X-RapidAPI-Key": "622ffbdde9msh222787b4db9c969p1d83a6jsna708611e67a3",
-    "X-RapidAPI-Host": "free-nba.p.rapidapi.com",
-  },
-};
-
-fetch("https://free-nba.p.rapidapi.com/teams?page=0", options)
-  .then((response) => response.json())
-  .then((response) => console.log(response))
-  .then((response) => (teamArray = response.data))
-  .then(console.log(teamArray))
-  .catch((err) => console.error(err));
