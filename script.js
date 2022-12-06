@@ -5,17 +5,10 @@ var teamArray = [];
 //send the team selection to the next page
 const url = new URL("http://127.0.0.1:5500/eval.html#");
 for (let i = 0; i < images.length; i++) {
-  //console.log(images[i].src);
   images[i].addEventListener("click", function () {
-    //console.log("clicked");
-    //console.log(images[i].src);
     getEval(images[i].src);
     console.log(url + teamName);
     window.location.assign(url + teamName);
-    // window.onload = function () {
-    //   console.log(url.pathname);
-    // };
-    //now have a method that will update the eval page with all the team info
   });
 }
 var teamName;
@@ -26,7 +19,6 @@ function getEval(image) {
     .toString();
   console.log(teamName);
   return teamName;
-  //document.getElementById("team-1").innerHTML.replace(teamName);
 }
 
 // Path: eval.html
@@ -34,17 +26,22 @@ async function teamInfo() {
   let team = window.location.hash.replace("#", "");
   document.getElementById("eval-logo").src = `images/${team}.png`;
   team = team.replaceAll("_", " ").replaceAll("j", "J");
-  document.getElementById("team-name").innerHTML = team;
+  if (team == "LA Clippers") {
+    document.getElementById("team-name").innerHTML = "Los Angeles Clippers";
+  } else {
+    document.getElementById("team-name").innerHTML = team;
+  }
   var city, name;
   //basketball stuff
   const allTeams = await fetch("https://www.balldontlie.io/api/v1/teams");
   const teams = await allTeams.json();
   console.log(teams);
+  console.log(team);
   const teamID = teams.data.filter((mapTeam) => {
     if (JSON.stringify(mapTeam.full_name) == JSON.stringify(team)) {
       city = mapTeam.city;
       name = mapTeam.name;
-      return mapTeam.id - 1;
+      return mapTeam.id;
     }
   });
   const Games = await fetch(
@@ -58,7 +55,7 @@ async function teamInfo() {
   var table = document.getElementById("schedule");
   var count = 1;
   const schedule = games.data.map((game) => {
-    var date = game.date.replaceAll("-", "/").replaceAll("T00:00:00.000Z", "");
+    var date = game.date.replaceAll("-", "/").replaceAll("T00:00:00.000Z", "").replaceAll("2022/", "") + "/2022";
     // console.log(date);
     var row = table.insertRow(count);
     var cell1 = row.insertCell(0);
@@ -66,15 +63,15 @@ async function teamInfo() {
     var cell3 = row.insertCell(2);
     cell1.innerHTML = date;
     if (game.home_team.full_name == team) {
-      cell2.innerHTML = game.home_team.full_name.bold();
+      cell2.innerHTML = game.home_team.name.bold();
     } else {
-      cell2.innerHTML = game.home_team.full_name;
+      cell2.innerHTML = game.home_team.name;
     }
 
     if (game.visitor_team.full_name == team) {
-      cell3.innerHTML = game.visitor_team.full_name.bold();
+      cell3.innerHTML = game.visitor_team.name.bold();
     } else {
-      cell3.innerHTML = game.visitor_team.full_name;
+      cell3.innerHTML = game.visitor_team.name;
     }
     // console.log(game.home_team.full_name);
   });
@@ -83,19 +80,25 @@ async function teamInfo() {
   var brew;
   if (team == "Golden State Warriors") {
     brew = await fetch(
-      "https://api.openbrewerydb.org/breweries?by_city=San_Francisco&per_page=10"
+      "https://api.openbrewerydb.org/breweries?by_city=San_Francisco&per_page=9"
     );
   } else if (team == "Utah Jazz") {
     brew = await fetch(
-      "https://api.openbrewerydb.org/breweries?by_city=Salt_Lake_city&per_page=10"
+      "https://api.openbrewerydb.org/breweries?by_city=Salt_Lake_city&per_page=9"
     );
   } else if (team == "Minnesota Timberwolves") {
     brew = await fetch(
-      "https://api.openbrewerydb.org/breweries?by_city=Minneapolis&per_page=10"
+      "https://api.openbrewerydb.org/breweries?by_city=Minneapolis&per_page=9"
     );
+  } else if (team == "Toronto Raptors") {
+    brew = await fetch(
+      "https://api.openbrewerydb.org/breweries?by_city=Buffalo&per_page=9"
+    );
+    document.getElementById("breweries").innerHTML +=
+      "<h2>Buffalo Breweries because Toronto is the only NBA team not in the US</h2>";
   } else {
     brew = await fetch(
-      "https://api.openbrewerydb.org/breweries?by_city=" + city + "&per_page=10"
+      "https://api.openbrewerydb.org/breweries?by_city=" + city + "&per_page=9"
     );
   }
   const breweries = await brew.json();
