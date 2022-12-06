@@ -30,11 +30,136 @@ function getEval(image) {
 }
 
 // Path: eval.html
-function teamInfo() {
+async function teamInfo() {
   let team = window.location.hash.replace("#", "");
   document.getElementById("eval-logo").src = `images/${team}.png`;
-  team = team.replaceAll("_", " ");
+  team = team.replaceAll("_", " ").replaceAll("j", "J");
   document.getElementById("team-name").innerHTML = team;
+  var city, name;
+  //basketball stuff
+  const allTeams = await fetch("https://www.balldontlie.io/api/v1/teams");
+  const teams = await allTeams.json();
+  console.log(teams);
+  const teamID = teams.data.filter((mapTeam) => {
+    if (JSON.stringify(mapTeam.full_name) == JSON.stringify(team)) {
+      city = mapTeam.city;
+      name = mapTeam.name;
+      return mapTeam.id - 1;
+    }
+  });
+  const Games = await fetch(
+    "https://www.balldontlie.io/api/v1/games?seasons[]=2022&team_ids[]=" +
+      teamID[0].id +
+      "&per_page=100"
+  );
+  const games = await Games.json();
+  games.data.sort(custom_sort);
+  // console.log(games);
+  var table = document.getElementById("schedule");
+  var count = 1;
+  const schedule = games.data.map((game) => {
+    var date = game.date.replaceAll("-", "/").replaceAll("T00:00:00.000Z", "");
+    // console.log(date);
+    var row = table.insertRow(count);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    cell1.innerHTML = date;
+    if (game.home_team.full_name == team) {
+      cell2.innerHTML = game.home_team.full_name.bold();
+    } else {
+      cell2.innerHTML = game.home_team.full_name;
+    }
+
+    if (game.visitor_team.full_name == team) {
+      cell3.innerHTML = game.visitor_team.full_name.bold();
+    } else {
+      cell3.innerHTML = game.visitor_team.full_name;
+    }
+    // console.log(game.home_team.full_name);
+  });
+  //brew stuff here
+  console.log(city);
+  var brew;
+  if (team == "golden state warriors") {
+    brew = await fetch(
+      "https://api.openbrewerydb.org/breweries?by_city=San_Francisco&per_page=10"
+    );
+  } else if (team == "Utah Jazz") {
+    brew = await fetch(
+      "https://api.openbrewerydb.org/breweries?by_city=Salt_Lake_city&per_page=10"
+    );
+  } else if (team == "Minnesota Timberwolves") {
+    brew = await fetch(
+      "https://api.openbrewerydb.org/breweries?by_city=Minneapolis&per_page=10"
+    );
+  } else {
+    brew = await fetch(
+      "https://api.openbrewerydb.org/breweries?by_city=" + city + "&per_page=10"
+    );
+  }
+  const breweries = await brew.json();
+
+  const brewery = breweries.map((brewery) => {
+    var num = brewery.phone;
+    var phone;
+    if (brewery.phone == null) {
+      phone = "N/A";
+    } else {
+      phone = num.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+    }
+    var bType = brewery.brewery_type;
+    var bDesc;
+    if (brewery.brewery_type == "micro") {
+      bDesc = "Most craft breweries";
+    } else if (brewery.brewery_type == "nano") {
+      bDesc =
+        "An extremely small brewery which typically only distributes locally.";
+    } else if (brewery.brewery_type == "regional") {
+      bDesc = "A regional location of an expanded brewery";
+    } else if (brewery.brewery_type == "brewpub") {
+      bDesc =
+        "A beer-focused restaurant or restaurant/bar with a brewery on-premise";
+    } else if (brewery.brewery_type == "large") {
+      bDesc = "A very large brewery. Likely not for visitors.";
+    } else if (brewery.brewery_type == "planning") {
+      bDesc = "A brewery in planning or not yet opened to the public.";
+    } else if (brewery.brewery_type == "bar") {
+      bDesc = "A bar. No brewery equipment on premise";
+    } else if (brewery.brewery_type == "contract") {
+      bDesc = "A brewery that uses another brewery’s equipment.";
+    } else if (brewery.brewery_type == "proprietor") {
+      bDesc =
+        "imilar to contract brewing but refers more to a brewery incubator.";
+    } else {
+      bType = "N/A";
+      bDesc = "N/A";
+    }
+    var bAddress = brewery.street;
+    if (brewery.street == null) {
+      bAddress = "N/A";
+    }
+    var bSite = brewery.website_url;
+    if (brewery.website_url == null) {
+      bSite = "N/A";
+    }
+    let c = `<div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">${brewery.name}</h5>
+          <p class="card-text">${bAddress}</p>
+          <p class="card-text">Brewery Type: ${bType} (${bDesc})</p>
+          <p class="card-text">${phone}</p>
+          <a href="${bSite}" class="btn btn-primary">Visit Website</a>
+        </div>
+      </div>
+    </div>`;
+    document.getElementById("breweries").innerHTML += c;
+  });
+}
+
+function custom_sort(a, b) {
+  return new Date(b.date).getTime() - new Date(a.date).getTime();
 }
 
 //search bar function
