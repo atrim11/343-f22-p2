@@ -14,7 +14,7 @@ for (let i = 0; i < images.length; i++) {
 var teamName;
 function getEval(image) {
   teamName = image
-    .replaceAll("http://127.0.0.1:5500/images/", "")
+    .replaceAll("https://atrim11.github.io/343-f22-p2/images/", "")
     .replaceAll(".png", "")
     .toString();
   console.log(teamName);
