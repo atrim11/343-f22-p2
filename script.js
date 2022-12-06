@@ -3,7 +3,7 @@ const images = document.querySelectorAll("img");
 var teamArray = [];
 //console.log(images);
 //send the team selection to the next page
-const url = new URL("http://127.0.0.1:5500/eval.html#");
+const url = new URL("https://atrim11.github.io/343-f22-p2/eval.html#");
 for (let i = 0; i < images.length; i++) {
   images[i].addEventListener("click", function () {
     getEval(images[i].src);
