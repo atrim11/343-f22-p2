@@ -81,7 +81,7 @@ async function teamInfo() {
   //brew stuff here
   console.log(city);
   var brew;
-  if (team == "golden state warriors") {
+  if (team == "Golden State Warriors") {
     brew = await fetch(
       "https://api.openbrewerydb.org/breweries?by_city=San_Francisco&per_page=10"
     );
