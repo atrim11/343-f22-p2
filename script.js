@@ -4,6 +4,8 @@ var teamArray = [];
 //console.log(images);
 //send the team selection to the next page
 const url = new URL("https://atrim11.github.io/343-f22-p2/eval.html#");
+//const url = new URL("http://127.0.0.1:5500/eval.html#");
+
 for (let i = 0; i < images.length; i++) {
   images[i].addEventListener("click", function () {
     getEval(images[i].src);
@@ -14,6 +16,7 @@ for (let i = 0; i < images.length; i++) {
 var teamName;
 function getEval(image) {
   teamName = image
+    //.replaceAll("http://127.0.0.1:5500/images/", "")
     .replaceAll("https://atrim11.github.io/343-f22-p2/images/", "")
     .replaceAll(".png", "")
     .toString();
@@ -55,7 +58,12 @@ async function teamInfo() {
   var table = document.getElementById("schedule");
   var count = 1;
   const schedule = games.data.map((game) => {
-    var date = game.date.replaceAll("-", "/").replaceAll("T00:00:00.000Z", "").replaceAll("2022/", "") + "/2022";
+    var date = game.date.replaceAll("-", "/").replaceAll("T00:00:00.000Z", "");
+    if (date.includes("2022")) {
+      date = date.replaceAll("2022/", "") + "/2022";
+    } else {
+      date = date.replaceAll("2023/", "") + "/2023";
+    }
     // console.log(date);
     var row = table.insertRow(count);
     var cell1 = row.insertCell(0);
@@ -107,9 +115,10 @@ async function teamInfo() {
     var num = brewery.phone;
     var phone;
     if (brewery.phone == null) {
-      phone = "N/A";
+      phone = "";
     } else {
-      phone = num.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+      phone =
+        "Phone Number: " + num.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
     }
     var bType = brewery.brewery_type;
     var bDesc;
@@ -135,23 +144,40 @@ async function teamInfo() {
       bDesc =
         "imilar to contract brewing but refers more to a brewery incubator.";
     } else {
-      bType = "N/A";
-      bDesc = "N/A";
+      bType = "";
+      bDesc = "";
+    }
+    if (bType != null) {
+      bType = "Type: " + bType;
+      bDesc = "Description: " + bDesc;
     }
     var bAddress = brewery.street;
+    var bCity = brewery.city;
+    var bState = brewery.state;
+    var bZip = brewery.postal_code;
     if (brewery.street == null) {
-      bAddress = "N/A";
+      bAddress = "";
+      bCity = "";
+      bState = "";
+      bZip = "";
+    } else {
+      bAddress = "Address: " + brewery.street + ", ";
+      bCity = brewery.city + ", ";
+      bState = brewery.state + ", ";
+      bZip = brewery.postal_code;
     }
     var bSite = brewery.website_url;
     if (brewery.website_url == null) {
       bSite = "N/A";
     }
+    // brewery card
     let c = `<div class="col">
-      <div class="card">
+      <div class="card text-center">
         <div class="card-body">
           <h5 class="card-title">${brewery.name}</h5>
-          <p class="card-text">${bAddress}</p>
-          <p class="card-text">Brewery Type: ${bType} (${bDesc})</p>
+          <p class="card-text">${bAddress} ${bCity} ${bState} ${bZip}</p>
+          <p class="card-text">${bType} </p>
+          <p class="card-text">${bDesc}</p>
           <p class="card-text">${phone}</p>
           <a href="${bSite}" class="btn btn-primary">Visit Website</a>
         </div>
@@ -160,7 +186,7 @@ async function teamInfo() {
     document.getElementById("breweries").innerHTML += c;
   });
 }
-
+//function to sort the dates by earliest to latest
 function custom_sort(a, b) {
   return new Date(b.date).getTime() - new Date(a.date).getTime();
 }
