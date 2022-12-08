@@ -28,5 +28,15 @@ input[type="text"]:focus {
 
 #breweries {
   padding-right: 3%;
-  
+  padding-top: 1%;
+}
+
+
+th {
+  font-size: 36px;
+}
+
+td {
+  font-size: 20px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
