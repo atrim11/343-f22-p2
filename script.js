@@ -142,6 +142,7 @@ async function teamInfo() {
     //need to see about skipping planning and ones with broken names like in houston
     if(team == "Washington Wizards" && brewery.state != "District of Columbia") {
       skip = true;
+      console.log("skipped");
     } else {
       skip = false;
     }
