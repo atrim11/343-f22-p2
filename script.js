@@ -3,8 +3,8 @@ const images = document.querySelectorAll("img");
 var teamArray = [];
 //console.log(images);
 //send the team selection to the next page
-//const url = new URL("https://atrim11.github.io/343-f22-p2/eval.html#");
-const url = new URL("http://127.0.0.1:5500/eval.html#");
+const url = new URL("https://atrim11.github.io/343-f22-p2/eval.html#");
+//const url = new URL("http://127.0.0.1:5500/eval.html#");
 
 for (let i = 0; i < images.length; i++) {
   images[i].addEventListener("click", function () {
@@ -16,8 +16,8 @@ for (let i = 0; i < images.length; i++) {
 var teamName;
 function getEval(image) {
   teamName = image
-    .replaceAll("http://127.0.0.1:5500/images/", "")
-    //.replaceAll("https://atrim11.github.io/343-f22-p2/images/", "")
+    //.replaceAll("http://127.0.0.1:5500/images/", "")
+    .replaceAll("https://atrim11.github.io/343-f22-p2/images/", "")
     .replaceAll(".png", "")
     .toString();
   console.log(teamName);
@@ -115,31 +115,51 @@ async function teamInfo() {
       "<h2>Buffalo Breweries because Toronto is the only NBA team not in the US</h2>";
   } else {
     brew = await fetch(
-      "https://api.openbrewerydb.org/breweries?by_city=" + city + "&per_page=20"
+      "https://api.openbrewerydb.org/breweries?by_city=" + city + "&per_page=25"
     );
   }
   const breweries = await brew.json();
+  console.log(breweries);
   let interate = 0;
+  if (
+    team == "New York Knicks" ||
+    team == "Detroit Pistons" ||
+    team == "Miami Heat" ||
+    team == "Portland Trail Blazers" ||
+    team == "Dallas Mavericks" ||
+    team == "Houston Rockets"
+  ) {
+    interate--;
+  } else if (team == "Cleveland Cavaliers" || team == "Memphis Grizzlies") {
+    interate -= 2;
+  }
   breweries.map((brewery) => {
     console.log(interate);
     console.log(brewery.city);
-
     console.log(brewery.name);
-    //need to see about skipping planning and ones with broken names like in houston 
+    //need to see about skipping planning and ones with broken names like in houston
     if (
-      (city == "Toronto" && brewery.city == "Buffalo" && interate < 9) ||
-      (team == "Minnesota Timberwolves" && brewery.city == "Minneapolis" && interate < 9) ||
-      (team == "Utah Jazz" && brewery.city == "Salt Lake City" && interate < 9) ||
-      (team == "Golden State Warriors" && brewery.city == "San Francisco" && interate < 9) ||
-      (team == "LA Clippers" && brewery.city == "Los Angeles" && interate < 9) ||
-      (team = "Indiana Pacers" && brewery.city == "Indianapolis" && interate < 9) ||
-      (team = "Miami Heat" && brewery.city == "Miami" && interate < 10) ||
-      (team = "New York Knicks" && brewery.city == "New York" && interate < 10) ||
-      (team = "Cleveland Cavaliers" && brewery.city == "Cleveland" && interate < 10) ||
-      (team = "Detroit Pistons" && brewery.city == "Detroit" && interate < 10) ||
-      (team = "Memphis Grizzlies" && brewery.city == "Memphis" && interate < 10) ||
-      (team = "Houston Rockets" && brewery.city == "Houston" && interate < 10) ||
-      (brewery.city == city && interate < 10)
+      (!brewery.brewery_type.includes("planning") &&
+        interate < 9 &&
+        team == "Toronto Raptors") ||
+      (!brewery.brewery_type.includes("planning") &&
+        interate < 9 &&
+        team == "Utah Jazz") ||
+      (!brewery.brewery_type.includes("planning") &&
+        interate < 9 &&
+        team == "Minnesota Timberwolves") ||
+      (!brewery.brewery_type.includes("planning") &&
+        interate < 9 &&
+        team == "LA Clippers") ||
+      (!brewery.brewery_type.includes("planning") &&
+        interate < 9 &&
+        team == "Golden State Warriors") ||
+      (!brewery.brewery_type.includes("planning") &&
+        interate < 9 &&
+        team == "Houston Rockets") ||
+      (!brewery.brewery_type.includes("planning") &&
+        interate < 9 &&
+        brewery.city == city)
     ) {
       var num = brewery.phone;
       var phone;
@@ -199,10 +219,12 @@ async function teamInfo() {
       if (brewery.website_url == null) {
         bSite = "N/A";
       }
-      // brewery card
-      let c;
-      if (bSite == "N/A") {
-        c = `<div class="col">
+
+      if (!brewery.name.includes("Anheuser-Busch")) {
+        // brewery card
+        let c;
+        if (bSite == "N/A") {
+          c = `<div class="col">
       <div class="card text-center">
         <div class="card-body">
           <h5 class="card-title">${brewery.name}</h5>
@@ -213,8 +235,8 @@ async function teamInfo() {
         </div>
       </div>
     </div>`;
-      } else {
-        c = `<div class="col">
+        } else {
+          c = `<div class="col">
       <div class="card text-center">
         <div class="card-body">
           <h5 class="card-title">${brewery.name}</h5>
@@ -226,9 +248,10 @@ async function teamInfo() {
         </div>
       </div>
     </div>`;
+        }
+        document.getElementById("breweries").innerHTML += c;
+        interate++;
       }
-      document.getElementById("breweries").innerHTML += c;
-      interate++;
     }
   });
 }
