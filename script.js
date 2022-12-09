@@ -244,7 +244,7 @@ async function teamInfo() {
           <p class="card-text">${bType} </p>
           <p class="card-text">${bDesc}</p>
           <p class="card-text">${phone}</p>
-          <a href="${bSite}" class="btn btn-primary">Visit Website</a>
+          <a href="${bSite}" target="_blank" class="btn btn-primary">Visit Website</a>
         </div>
       </div>
     </div>`;
