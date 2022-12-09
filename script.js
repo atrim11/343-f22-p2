@@ -134,32 +134,20 @@ async function teamInfo() {
     interate -= 2;
   }
   breweries.map((brewery) => {
-    console.log(interate);
-    console.log(brewery.city);
-    console.log(brewery.name);
+    //console.log(interate);
+    //console.log(brewery.city);
+    //console.log(brewery.name);
+    console.log(brewery.state);
     //need to see about skipping planning and ones with broken names like in houston
     if (
-      (!brewery.brewery_type.includes("planning") &&
-        interate < 9 &&
-        team == "Toronto Raptors") ||
-      (!brewery.brewery_type.includes("planning") &&
-        interate < 9 &&
-        team == "Utah Jazz") ||
-      (!brewery.brewery_type.includes("planning") &&
-        interate < 9 &&
-        team == "Minnesota Timberwolves") ||
-      (!brewery.brewery_type.includes("planning") &&
-        interate < 9 &&
-        team == "LA Clippers") ||
-      (!brewery.brewery_type.includes("planning") &&
-        interate < 9 &&
-        team == "Golden State Warriors") ||
-      (!brewery.brewery_type.includes("planning") &&
-        interate < 9 &&
-        team == "Houston Rockets") ||
-      (!brewery.brewery_type.includes("planning") &&
-        interate < 9 &&
-        brewery.city == city)
+      (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Toronto Raptors") ||
+      (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Utah Jazz") ||
+      (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Minnesota Timberwolves") ||
+      (!brewery.brewery_type.includes("planning") && interate < 9 && team == "LA Clippers") ||
+      (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Golden State Warriors") ||
+      (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Houston Rockets") ||
+      (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Indiana Pacers") ||
+      (!brewery.brewery_type.includes("planning") && interate < 9 && brewery.city == city)
     ) {
       var num = brewery.phone;
       var phone;
