@@ -133,12 +133,18 @@ async function teamInfo() {
   } else if (team == "Cleveland Cavaliers" || team == "Memphis Grizzlies") {
     interate -= 2;
   }
+  let skip = false;
   breweries.map((brewery) => {
     //console.log(interate);
     //console.log(brewery.city);
     //console.log(brewery.name);
     console.log(brewery.state);
     //need to see about skipping planning and ones with broken names like in houston
+    if(team == "Washington Wizards" && brewery.state != "District of Columbia") {
+      skip = true;
+    } else {
+      skip = false;
+    }
     if (
       (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Toronto Raptors") ||
       (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Utah Jazz") ||
@@ -147,7 +153,7 @@ async function teamInfo() {
       (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Golden State Warriors") ||
       (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Houston Rockets") ||
       (!brewery.brewery_type.includes("planning") && interate < 9 && team == "Indiana Pacers") ||
-      (!brewery.brewery_type.includes("planning") && interate < 9 && brewery.city == city)
+      (!brewery.brewery_type.includes("planning") && interate < 9 && brewery.city == city && skip == false)
     ) {
       var num = brewery.phone;
       var phone;
