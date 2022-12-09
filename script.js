@@ -139,7 +139,7 @@ async function teamInfo() {
     //console.log(brewery.city);
     //console.log(brewery.name);
     console.log(brewery.state);
-    //need to see about skipping planning and ones with broken names like in houston
+    //needed to check for correct washington breweries
     if(team == "Washington Wizards" && brewery.state != "District of Columbia") {
       skip = true;
       console.log("skipped");
@@ -214,7 +214,7 @@ async function teamInfo() {
       if (brewery.website_url == null) {
         bSite = "N/A";
       }
-
+      //need to see about skipping planning and ones with broken names like in houston
       if (!brewery.name.includes("Anheuser-Busch")) {
         // brewery card
         let c;
