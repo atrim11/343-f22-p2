@@ -3,7 +3,7 @@ const images = document.querySelectorAll("img");
 var teamArray = [];
 //console.log(images);
 //send the team selection to the next page
-const url = new URL("https://atrim11.github.io/343-f22-p2/eval.html#");
+const url = new URL("https://atrim11.github.io/Hoops-N-Brews/eval.html#");
 //const url = new URL("http://127.0.0.1:5500/eval.html#");
 
 for (let i = 0; i < images.length; i++) {
@@ -17,7 +17,7 @@ var teamName;
 function getEval(image) {
   teamName = image
     //.replaceAll("http://127.0.0.1:5500/images/", "")
-    .replaceAll("https://atrim11.github.io/343-f22-p2/images/", "")
+    .replaceAll("https://atrim11.github.io/Hoops-N-Brews/images/", "")
     .replaceAll(".png", "")
     .toString();
   console.log(teamName);
